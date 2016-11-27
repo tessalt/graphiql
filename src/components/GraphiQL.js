@@ -21,6 +21,7 @@ import { QueryEditor } from './QueryEditor';
 import { VariableEditor } from './VariableEditor';
 import { ResultViewer } from './ResultViewer';
 import { DocExplorer } from './DocExplorer';
+import QueryHistory from './QueryHistory';
 import CodeMirrorSizer from '../utility/CodeMirrorSizer';
 import getQueryFacts from '../utility/getQueryFacts';
 import getSelectedOperationName from '../utility/getSelectedOperationName';
@@ -234,6 +235,14 @@ export class GraphiQL extends React.Component {
     });
   }
 
+  setQuery(query, variables, operationName) {
+    this.setState({
+      query,
+      variables,
+      operationName,
+    });
+  }
+
   componentDidUpdate() {
     // If this update caused DOM nodes to have changed sizes, update the
     // corresponding CodeMirror instance sizes to match.
@@ -312,6 +321,12 @@ export class GraphiQL extends React.Component {
               </button>
             }
           </div>
+          <QueryHistory
+            operationName={this.state.operationName}
+            query={this.state.query}
+            variables={this.state.variables}
+            setQuery={this.setQuery.bind(this)}
+            queryID={this._editorQueryID} />
           <div
             ref={n => { this.editorBarComponent = n; }}
             className="editorBar"
