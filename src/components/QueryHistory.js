@@ -13,7 +13,7 @@ class HistoryQuery extends React.Component {
     if (this.props.operationName) {
       return this.props.operationName;
     }
-    return this.props.query.split('\n').filter((line) => line.indexOf('#') !== 0).join('');
+    return this.props.query.split('\n').filter((line) => line.indexOf('#') !== 0).join('').replace('\s', '');
   }
 
   setQuery() {
@@ -78,8 +78,12 @@ export default class QueryHistory extends React.Component {
    });
    return (
      <div>
-     <h2>History</h2>
-      {queries}
+     <div className="history-title-bar">
+      <div className="history-title">History</div>
+     </div>
+      <div className="history-contents">
+        {queries}
+      </div>
     </div>
    )
  }

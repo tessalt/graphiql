@@ -121,6 +121,7 @@ export class GraphiQL extends React.Component {
     onEditVariables: PropTypes.func,
     onEditOperationName: PropTypes.func,
     onToggleDocs: PropTypes.func,
+    onToggleHistory: PropTypes.func,
     getDefaultFieldNames: PropTypes.func
   }
 
@@ -172,6 +173,8 @@ export class GraphiQL extends React.Component {
         Number(this._storageGet('variableEditorHeight')) || 200,
       docExplorerOpen:
         (this._storageGet('docExplorerOpen') === 'true') || false,
+      historyPaneOpen:
+          (this._storageGet('historyPaneOpen') === 'true') || false,
       docExplorerWidth: Number(this._storageGet('docExplorerWidth')) || 350,
       isWaitingForResponse: false,
       subscription: null,
@@ -288,16 +291,35 @@ export class GraphiQL extends React.Component {
       width: this.state.docExplorerWidth,
     };
 
+    const historyPaneStyle = {
+      display: this.state.historyPaneOpen ? 'none': 'block',
+      width: '230px',
+      zIndex: '7'
+    }
+
     const variableOpen = this.state.variableEditorOpen;
     const variableStyle = {
       height: variableOpen ? this.state.variableEditorHeight : null
     };
 
+    const historyPaneOpen = this.state.historyPaneOpen;
+
     return (
       <div className="graphiql-container">
+      <div className="historyPaneWrap" style={historyPaneStyle}>
+        <QueryHistory
+          operationName={this.state.operationName}
+          query={this.state.query}
+          variables={this.state.variables}
+          setQuery={this.setQuery.bind(this)}
+          queryID={this._editorQueryID}
+        />
+      </div>
         <div className="editorWrap">
           <div className="topBarWrap">
+            <button className="historyShow" onClick={this.handleToggleHistory}>History</button>
             <div className="topBar">
+
               {logo}
               <ExecuteButton
                 isRunning={Boolean(this.state.subscription)}
@@ -310,6 +332,7 @@ export class GraphiQL extends React.Component {
                 title="Prettify Query"
                 label="Prettify"
               />
+
               {toolbar}
             </div>
             {
@@ -321,17 +344,14 @@ export class GraphiQL extends React.Component {
               </button>
             }
           </div>
-          <QueryHistory
-            operationName={this.state.operationName}
-            query={this.state.query}
-            variables={this.state.variables}
-            setQuery={this.setQuery.bind(this)}
-            queryID={this._editorQueryID} />
+
           <div
             ref={n => { this.editorBarComponent = n; }}
             className="editorBar"
             onMouseDown={this.handleResizeStart}>
+
             <div className="queryWrap" style={queryWrapStyle}>
+
               <QueryEditor
                 ref={n => { this.queryEditorComponent = n; }}
                 schema={this.state.schema}
@@ -371,7 +391,9 @@ export class GraphiQL extends React.Component {
               {footer}
             </div>
           </div>
+
         </div>
+
         <div className="docExplorerWrap" style={docWrapStyle}>
           <div
             className="docExplorerResizer"
@@ -725,6 +747,13 @@ export class GraphiQL extends React.Component {
       this.props.onToggleDocs(!this.state.docExplorerOpen);
     }
     this.setState({ docExplorerOpen: !this.state.docExplorerOpen });
+  }
+
+  handleToggleHistory = () => {
+    if (typeof this.props.onToggleHistory === 'function') {
+      this.props.onToggleHistory(!this.state.historyPaneOpen);
+    }
+    this.setState({ historyPaneOpen: !this.state.historyPaneOpen });
   }
 
   handleResizeStart = downEvent => {
