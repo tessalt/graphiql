@@ -39,6 +39,11 @@
 
 .graphiql-container .title {
   font-size: 18px;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
 }
 
 .graphiql-container .title em {
@@ -47,6 +52,7 @@
 }
 
 .graphiql-container .topBarWrap {
+  position: relative;
   display: -webkit-flex;
   display: -ms-flexbox;
   -webkit-flex-direction: row;

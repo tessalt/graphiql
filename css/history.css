@@ -13,4 +13,7 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-
+.graphiql-container .history-contents p:hover {
+  background-color: #f6f6f6;
+  cursor: pointer;
+}
