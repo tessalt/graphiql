@@ -294,8 +294,6 @@ export class GraphiQL extends React.Component {
 
     const historyPaneStyle = {
       display: this.state.historyPaneOpen ? 'block': 'none',
-      width: '230px',
-      zIndex: '7'
     }
 
     const variableOpen = this.state.variableEditorOpen;
@@ -314,7 +312,11 @@ export class GraphiQL extends React.Component {
           variables={this.state.variables}
           setQuery={this.setQuery.bind(this)}
           queryID={this._editorQueryID}
-        />
+        >
+          <div className="docExplorerHide" onClick={this.handleToggleHistory}>
+            {'\u2715'}
+          </div>
+        </QueryHistory>
       </div>
         <div className="editorWrap">
           <div className="topBarWrap">
